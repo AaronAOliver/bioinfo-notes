@@ -1,7 +1,8 @@
-book_filename: "bookdown-demo"
+book_filename: "bioinfo-notes"
 language:
   ui:
     chapter_name: ""
 delete_merged_file: true
+output_dir: "docs"
 
 rmd_files: ["index.Rmd", "genome-assembly.Rmd", "genome-annotation.Rmd", "metagenomics.Rmd", "transcripts.Rmd", "metatranscripts.Rmd", "references.Rmd"]
