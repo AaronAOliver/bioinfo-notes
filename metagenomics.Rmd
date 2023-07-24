@@ -1,0 +1,42 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Metagenomic Assembly and Binning {#metaG}
+
+## Exploring the bins
+
+### Bin completeness and quality metrics
+
+Depending on which metagenomic binner you choose, this step might
+already be done for you. When assessing the quality of a single bin,
+there are two source of data you want to analyze: completeness and
+contamination (CheckM2) and assembly statistics (Quast).
+
+### Assess genome taxonomy
+
+To assess genomic novelty and get the closest relatives at the
+nucleotide level, we can use the Genome Taxonomy Database Toolkit
+[@chaumeil2020]. GTDB-Tk will accept a set of assembled or binned
+prokaryotic genomes, and provide a predicted phylogenetic lineage, the
+closest known relative, and a distance metric (average nucleotide
+identity) to that relative.
+
+```{r, engine = 'bash', eval = FALSE}
+gtdbtk classify_wf --genome_dir bins --out_dir gtdb-tk
+```
+
+Other useful parameters include the file extension of metagenomic bins
+in your bin folder (--x), and the number of CPUs (--cpu). As an example,
+if your folder was full of .fna ("fasta nucleic acid") files, and you
+wanted to use 8 CPUs, you could use the command:
+
+```{r, engine = 'bash', eval = FALSE}
+gtdbtk classify_wf --genome_dir bins --out_dir gtdb-tk --x fna --cpu 8
+```
+
+Keep in mind that the GTDB [@parks2022] can diverge in taxonomic names
+from other resources such as NCBI, so you should try to be consistent in
+what naming system you will use throughout your project.

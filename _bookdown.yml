@@ -1,0 +1,7 @@
+book_filename: "bookdown-demo"
+language:
+  ui:
+    chapter_name: ""
+delete_merged_file: true
+
+rmd_files: ["index.Rmd", "genome-assembly.Rmd", "genome-annotation.Rmd", "metagenomics.Rmd", "transcripts.Rmd", "metatranscripts.Rmd", "references.Rmd"]

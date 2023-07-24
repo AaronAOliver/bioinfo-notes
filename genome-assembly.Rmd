@@ -1,0 +1,59 @@
+# Cultured Genome Assembly
+talk about the differences between short and long read assembly
+
+## Short read assembly
+### Quality control
+
+### Trimming
+
+### Taxonomic assessment
+
+### Running the assembler
+
+## Long read assembly
+Long read (PacBio and ONT) assembly uses a different suite of tools due to differences in assembly methods and datatypes.
+
+### Quality control
+
+LongQC
+
+Long re
+
+```{r, engine = 'bash', eval = FALSE}
+python longQC.py sampleqc -x [sequencer] -o qc_output raw_reads.fq
+```
+
+where the sequencer can be one of the following: ```pb-rs2```, ```pb-sequel```, ```pb-hifi```, ```ont-ligation``` (PromethION), or ```ont-rapid``` (MinION, GridION, Flongle).
+
+### Taxonomic assessment
+
+
+### Running the assembler
+There are many valid choices of assembler for long reads. Among the most popular and best validated are Flye (ONT/PacBio), Canu (ONT/PacBio), miniasm (ONT/PacBio), Raven (ONT/PacBio), Falcon (PacBio), and the hybrid assembler Unicycler (Illumina + ONT/PacBio).
+
+Each assembler comes with different usecases and drawbacks. For example, Canu is very slow and Falcon can only use PacBio reads, but both are diploid-aware assemblers which might be critical for certain use cases. Hybrid assembly can work well when single nucleotide differences are important, such as when a strain-level reference genome is available.
+
+I will use Flye [![Anaconda-Server Badge](https://anaconda.org/bioconda/flye/badges/version.svg)](https://anaconda.org/bioconda/flye)
+for this tutorial, since it also has a metagenomic mode for long read MAG binning. So if you are comfortable using Flye for genomes, you can use it for metagenomes too!
+
+```{r, engine = 'bash', eval = FALSE}
+flye --sequence-type --genome-size [] raw_reads.fq --out-dir assembly
+```
+
+where the sequence type is one of ```--pacbio-raw```, ```--pacbio-hifi```, ```--nano-raw```, or ```--nano-hq```. Estimating genome size based on a quick skim of closest relatives can give you a better assembly, but its optional. The estimated genome size can be formatted in Megabases or Gigabases, e.g. 200m or 3.6g. The CPU parameter for flye is ```--threads```.
+
+The output assembly will be located in ```assembly/assembly.fasta```.
+
+
+
+### Polishing
+Medaka
+
+## Assembly assessment
+QUAST
+
+### Prokaryotic genome
+CheckM2
+
+### Eukaryotic genome
+BUSCO

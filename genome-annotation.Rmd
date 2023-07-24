@@ -1,0 +1,6 @@
+# Genome Annotation
+## Building gene models
+### Prokaryotes
+### Eukaryotes
+
+## Annotating proteins

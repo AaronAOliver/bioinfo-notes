@@ -1,0 +1,28 @@
+--- 
+title: "Aaron's Bioinformatics Notes"
+author: "Aaron Oliver"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output:   
+  html_document:
+    highlight: pygments
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+description: "Some snapshots of software and commands I use to run various metagenomic analyses."
+---
+
+# Preamble
+
+Welcome, this is a collection of different standardized genomic analysis pipelines that I often use.
+In celebration of SIO-BUG's 2023 revival, I've decided to pretty these code notebooks up and make them accessible to everyone in the SIO community.
+
+Each page is dedicated to one analysis and includes detailed documentation about each software program that I use, reasons why I've chosen it over alternatives, the exact commands that I use, and answers to some previously asked questions.
+
+I will not go into detail about how to install each program that I mention. I'll instead
+link appropriate conda packages or KBase modules when available. I might also throw in a conda 
+tutorial at some point, depending on how busy I get.
+
+Small blurb about myself: I am a 3rd year marine biology student in Eric Allen's lab at SIO. Before that, I worked as an undergraduate bioinformatics researcher for 3 years and taught as an instructional assistant in the UCSD Computer Science department for 2 years. I got my bachelors in bioinformatics in 2021. 
