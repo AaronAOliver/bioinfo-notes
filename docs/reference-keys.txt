@@ -3,13 +3,12 @@ cultured-genome-assembly
 short-read-assembly
 quality-control
 trimming
-taxonomic-assessment
 running-the-assembler
 long-read-assembly
 quality-control-1
-taxonomic-assessment-1
 running-the-assembler-1
-polishing
+polishing-with-medaka-ont
+polishing-with-racon-pacbio
 assembly-assessment
 prokaryotic-genome
 eukaryotic-genome

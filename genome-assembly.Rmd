@@ -6,8 +6,6 @@ talk about the differences between short and long read assembly
 
 ### Trimming
 
-### Taxonomic assessment
-
 ### Running the assembler
 
 
@@ -20,7 +18,7 @@ Long read (PacBio and ONT) assembly uses a different suite of tools due to diffe
 
 ### Quality control
 
-LongQC
+LongQC [[GitHub](https://github.com/yfukasawa/LongQC), [Conda](https://anaconda.org/bioconda/longqc), [Paper](https://doi.org/10.1534/g3.119.400864)]
 
 Long re
 
@@ -30,16 +28,12 @@ python longQC.py sampleqc -x [sequencer] -o qc_output raw_reads.fq
 
 where the sequencer can be one of the following: ```pb-rs2```, ```pb-sequel```, ```pb-hifi```, ```ont-ligation``` (PromethION), or ```ont-rapid``` (MinION, GridION, Flongle).
 
-### Taxonomic assessment
-This step is more time consuming for long reads than short reads. So, I would recommend skipping this step and only coming back here 
-
-
 ### Running the assembler
 There are many valid choices of assembler for long reads. Among the most popular and best validated are Flye (ONT/PacBio), Canu (ONT/PacBio), miniasm (ONT/PacBio), Raven (ONT/PacBio), Falcon (PacBio), and the hybrid (Illumina + ONT/PacBio) assemblers Unicycler and hybridSPAdes.
 
 Each assembler comes with different usecases and drawbacks. For example, Canu is very slow and Falcon can only use PacBio reads, but both are diploid-aware assemblers which might be critical for certain use cases. Hybrid assembly can work well when single nucleotide differences are important, such as when a strain-level reference genome is available.
 
-I will use Flye [![Anaconda-Server Badge](https://anaconda.org/bioconda/flye/badges/version.svg)](https://anaconda.org/bioconda/flye)
+I will use Flye [[GitHub](https://github.com/fenderglass/Flye), [Conda](https://anaconda.org/bioconda/flye), [Paper](https://doi.org/10.1038/s41587-019-0072-8)]
 for this tutorial, since it also has a metagenomic mode for long read MAG binning. So once you are comfortable using Flye for genomes, you can use it for metagenomes too!
 
 ```{r, engine = 'bash', eval = FALSE}
@@ -50,16 +44,16 @@ where the sequence type is one of ```--pacbio-raw```, ```--pacbio-hifi```, ```--
 
 The output assembly will be located in ```assembly/assembly.fasta```.
 
-### Polishing
+### Polishing with Medaka (ONT)
 There are also many polishers to be used with long read data. For ONT sequencing, Oxford Nanopore's own
-Medaka polisher [[Github](https://github.com/nanoporetech/medaka), [Conda](https://anaconda.org/bioconda/medaka)] works well, is very fast, and can polish using the same reads input into the assembly. Since Medaka is specifically built to work best with Flye, we will use it for this tutorial.
+Medaka polisher [[GitHub](https://github.com/nanoporetech/medaka), [Conda](https://anaconda.org/bioconda/medaka)] works well, is very fast, and can polish using the same reads input into the assembly. Since Medaka is specifically built to work best with Flye, we will use it for this tutorial.
 
 To run Medaka:
 ```{r, engine = 'bash', eval = FALSE}
 medaka_consensus -i raw_reads.fq -d assembly/assembly.fasta -o medaka_polished -m [model]
 ```
 
-[See here for more information about how to choose the appropriate model](https://github.com/nanoporetech/medaka#models). Your results will be better if you carefully choose the right model, but the program should also work if you just provide ```r941_min_fast_g303``` for MinION/GridION or ```r941_prom_hac_g303``` for high accuracy PrometION data. The CPU parameter for medaka is ```-t```.
+[See here for more information about how to choose the appropriate model](https://github.com/nanoporetech/medaka#models). Your results will be better if you carefully choose the right model, but the program should also work if you just provide ```r941_min_fast_g303``` for MinION/GridION or ```r941_prom_hac_g303``` for high accuracy PromethION data. The CPU parameter for medaka is ```-t```.
 
 Your new polished assembly will be located in ```medaka_polished/consensus.fasta```.
 
@@ -68,17 +62,11 @@ For consistency with the short read tutorial for the steps below, I am going to 
 ln -s medaka_polished/consensus.fasta best_assembly.fasta
 ```
 
-For PacBio data, I suggest polishing with Racon [](). 
+### Polishing with Racon (PacBio)
+For PacBio data, I suggest polishing with Racon [[GitHub](https://github.com/lbcb-sci/racon), [Conda](https://anaconda.org/bioconda/racon), [Paper](https://doi.org/10.1101/gr.214270.116)]. 
 
 ## Assembly assessment
-QUAST [[Github](https://github.com/ablab/quast), [Conda](https://anaconda.org/bioconda/quast)] will give 
-
-./quast.py test_data/contigs_1.fasta \
-           test_data/contigs_2.fasta \
-        -r test_data/reference.fasta.gz \
-        -g test_data/genes.txt \
-        -1 test_data/reads1.fastq.gz -2 test_data/reads2.fastq.gz \
-        -o quast_test_output
+QUAST [[GitHub](https://github.com/ablab/quast), [Conda](https://anaconda.org/bioconda/quast)] will give 
         
 ```{r, engine = 'bash', eval = FALSE}
 quast.py best_assembly.fasta -o quast_output

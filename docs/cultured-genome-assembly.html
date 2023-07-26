@@ -169,15 +169,14 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.1.1" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#quality-control"><i class="fa fa-check"></i><b>2.1.1</b> Quality control</a></li>
 <li class="chapter" data-level="2.1.2" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#trimming"><i class="fa fa-check"></i><b>2.1.2</b> Trimming</a></li>
-<li class="chapter" data-level="2.1.3" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#taxonomic-assessment"><i class="fa fa-check"></i><b>2.1.3</b> Taxonomic assessment</a></li>
-<li class="chapter" data-level="2.1.4" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#running-the-assembler"><i class="fa fa-check"></i><b>2.1.4</b> Running the assembler</a></li>
+<li class="chapter" data-level="2.1.3" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#running-the-assembler"><i class="fa fa-check"></i><b>2.1.3</b> Running the assembler</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#long-read-assembly"><i class="fa fa-check"></i><b>2.2</b> Long read assembly</a>
 <ul>
 <li class="chapter" data-level="2.2.1" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#quality-control-1"><i class="fa fa-check"></i><b>2.2.1</b> Quality control</a></li>
-<li class="chapter" data-level="2.2.2" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#taxonomic-assessment-1"><i class="fa fa-check"></i><b>2.2.2</b> Taxonomic assessment</a></li>
-<li class="chapter" data-level="2.2.3" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#running-the-assembler-1"><i class="fa fa-check"></i><b>2.2.3</b> Running the assembler</a></li>
-<li class="chapter" data-level="2.2.4" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#polishing"><i class="fa fa-check"></i><b>2.2.4</b> Polishing</a></li>
+<li class="chapter" data-level="2.2.2" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#running-the-assembler-1"><i class="fa fa-check"></i><b>2.2.2</b> Running the assembler</a></li>
+<li class="chapter" data-level="2.2.3" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#polishing-with-medaka-ont"><i class="fa fa-check"></i><b>2.2.3</b> Polishing with Medaka (ONT)</a></li>
+<li class="chapter" data-level="2.2.4" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#polishing-with-racon-pacbio"><i class="fa fa-check"></i><b>2.2.4</b> Polishing with Racon (PacBio)</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#assembly-assessment"><i class="fa fa-check"></i><b>2.3</b> Assembly assessment</a>
 <ul>
@@ -236,11 +235,8 @@ div.csl-indent {
 <div id="trimming" class="section level3 hasAnchor" number="2.1.2">
 <h3><span class="header-section-number">2.1.2</span> Trimming<a href="cultured-genome-assembly.html#trimming" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 </div>
-<div id="taxonomic-assessment" class="section level3 hasAnchor" number="2.1.3">
-<h3><span class="header-section-number">2.1.3</span> Taxonomic assessment<a href="cultured-genome-assembly.html#taxonomic-assessment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-</div>
-<div id="running-the-assembler" class="section level3 hasAnchor" number="2.1.4">
-<h3><span class="header-section-number">2.1.4</span> Running the assembler<a href="cultured-genome-assembly.html#running-the-assembler" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="running-the-assembler" class="section level3 hasAnchor" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> Running the assembler<a href="cultured-genome-assembly.html#running-the-assembler" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="cultured-genome-assembly.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> assembly/assembly.fasta best_assembly.fasta</span></code></pre></div>
 </div>
 </div>
@@ -249,47 +245,40 @@ div.csl-indent {
 <p>Long read (PacBio and ONT) assembly uses a different suite of tools due to differences in assembly methods and datatypes.</p>
 <div id="quality-control-1" class="section level3 hasAnchor" number="2.2.1">
 <h3><span class="header-section-number">2.2.1</span> Quality control<a href="cultured-genome-assembly.html#quality-control-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>LongQC</p>
+<p>LongQC [<a href="https://github.com/yfukasawa/LongQC">GitHub</a>, <a href="https://anaconda.org/bioconda/longqc">Conda</a>, <a href="https://doi.org/10.1534/g3.119.400864">Paper</a>]</p>
 <p>Long re</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="cultured-genome-assembly.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> longQC.py sampleqc <span class="at">-x</span> [sequencer] <span class="at">-o</span> qc_output raw_reads.fq</span></code></pre></div>
 <p>where the sequencer can be one of the following: <code>pb-rs2</code>, <code>pb-sequel</code>, <code>pb-hifi</code>, <code>ont-ligation</code> (PromethION), or <code>ont-rapid</code> (MinION, GridION, Flongle).</p>
 </div>
-<div id="taxonomic-assessment-1" class="section level3 hasAnchor" number="2.2.2">
-<h3><span class="header-section-number">2.2.2</span> Taxonomic assessment<a href="cultured-genome-assembly.html#taxonomic-assessment-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>This step is more time consuming for long reads than short reads. So, I would recommend skipping this step and only coming back here</p>
-</div>
-<div id="running-the-assembler-1" class="section level3 hasAnchor" number="2.2.3">
-<h3><span class="header-section-number">2.2.3</span> Running the assembler<a href="cultured-genome-assembly.html#running-the-assembler-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="running-the-assembler-1" class="section level3 hasAnchor" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Running the assembler<a href="cultured-genome-assembly.html#running-the-assembler-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>There are many valid choices of assembler for long reads. Among the most popular and best validated are Flye (ONT/PacBio), Canu (ONT/PacBio), miniasm (ONT/PacBio), Raven (ONT/PacBio), Falcon (PacBio), and the hybrid (Illumina + ONT/PacBio) assemblers Unicycler and hybridSPAdes.</p>
 <p>Each assembler comes with different usecases and drawbacks. For example, Canu is very slow and Falcon can only use PacBio reads, but both are diploid-aware assemblers which might be critical for certain use cases. Hybrid assembly can work well when single nucleotide differences are important, such as when a strain-level reference genome is available.</p>
-<p>I will use Flye <a href="https://anaconda.org/bioconda/flye"><img src="https://anaconda.org/bioconda/flye/badges/version.svg" alt="Anaconda-Server Badge" /></a>
+<p>I will use Flye [<a href="https://github.com/fenderglass/Flye">GitHub</a>, <a href="https://anaconda.org/bioconda/flye">Conda</a>, <a href="https://doi.org/10.1038/s41587-019-0072-8">Paper</a>]
 for this tutorial, since it also has a metagenomic mode for long read MAG binning. So once you are comfortable using Flye for genomes, you can use it for metagenomes too!</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="cultured-genome-assembly.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">flye</span> [sequence-type] <span class="at">--genome-size</span> [] raw_reads.fq <span class="at">--out-dir</span> assembly</span></code></pre></div>
 <p>where the sequence type is one of <code>--pacbio-raw</code>, <code>--pacbio-hifi</code>, <code>--nano-raw</code>, or <code>--nano-hq</code>. Estimating genome size based on a quick skim of closest relatives can give you a better assembly, but its optional. The estimated genome size can be formatted in Megabases or Gigabases, e.g. 200m or 3.6g. The CPU parameter for flye is <code>--threads</code>.</p>
 <p>The output assembly will be located in <code>assembly/assembly.fasta</code>.</p>
 </div>
-<div id="polishing" class="section level3 hasAnchor" number="2.2.4">
-<h3><span class="header-section-number">2.2.4</span> Polishing<a href="cultured-genome-assembly.html#polishing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="polishing-with-medaka-ont" class="section level3 hasAnchor" number="2.2.3">
+<h3><span class="header-section-number">2.2.3</span> Polishing with Medaka (ONT)<a href="cultured-genome-assembly.html#polishing-with-medaka-ont" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>There are also many polishers to be used with long read data. For ONT sequencing, Oxford Nanopore’s own
-Medaka polisher [<a href="https://github.com/nanoporetech/medaka">Github</a>, <a href="https://anaconda.org/bioconda/medaka">Conda</a>] works well, is very fast, and can polish using the same reads input into the assembly. Since Medaka is specifically built to work best with Flye, we will use it for this tutorial.</p>
+Medaka polisher [<a href="https://github.com/nanoporetech/medaka">GitHub</a>, <a href="https://anaconda.org/bioconda/medaka">Conda</a>] works well, is very fast, and can polish using the same reads input into the assembly. Since Medaka is specifically built to work best with Flye, we will use it for this tutorial.</p>
 <p>To run Medaka:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="cultured-genome-assembly.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">medaka_consensus</span> <span class="at">-i</span> raw_reads.fq <span class="at">-d</span> assembly/assembly.fasta <span class="at">-o</span> medaka_polished <span class="at">-m</span> [model]</span></code></pre></div>
 <p><a href="https://github.com/nanoporetech/medaka#models">See here for more information about how to choose the appropriate model</a>. Your results will be better if you carefully choose the right model, but the program should also work if you just provide <code>r941_min_fast_g303</code> for MinION/GridION or <code>r941_prom_hac_g303</code> for high accuracy PrometION data. The CPU parameter for medaka is <code>-t</code>.</p>
 <p>Your new polished assembly will be located in <code>medaka_polished/consensus.fasta</code>.</p>
 <p>For consistency with the short read tutorial for the steps below, I am going to create a symbolic link to our best assembly that we will use for the assembly assessment steps.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="cultured-genome-assembly.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> medaka_polished/consensus.fasta best_assembly.fasta</span></code></pre></div>
-<p>For PacBio data, I suggest polishing with Racon <a href=""></a>.</p>
+</div>
+<div id="polishing-with-racon-pacbio" class="section level3 hasAnchor" number="2.2.4">
+<h3><span class="header-section-number">2.2.4</span> Polishing with Racon (PacBio)<a href="cultured-genome-assembly.html#polishing-with-racon-pacbio" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For PacBio data, I suggest polishing with Racon [<a href="https://github.com/lbcb-sci/racon">GitHub</a>, <a href="https://anaconda.org/bioconda/racon">Conda</a>, <a href="https://doi.org/10.1101/gr.214270.116">Paper</a>].</p>
 </div>
 </div>
 <div id="assembly-assessment" class="section level2 hasAnchor" number="2.3">
 <h2><span class="header-section-number">2.3</span> Assembly assessment<a href="cultured-genome-assembly.html#assembly-assessment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>QUAST [<a href="https://github.com/ablab/quast">Github</a>, <a href="https://anaconda.org/bioconda/quast">Conda</a>] will give</p>
-<p>./quast.py test_data/contigs_1.fasta<br />
-test_data/contigs_2.fasta<br />
--r test_data/reference.fasta.gz<br />
--g test_data/genes.txt<br />
--1 test_data/reads1.fastq.gz -2 test_data/reads2.fastq.gz<br />
--o quast_test_output</p>
+<p>QUAST [<a href="https://github.com/ablab/quast">GitHub</a>, <a href="https://anaconda.org/bioconda/quast">Conda</a>] will give</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="cultured-genome-assembly.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quast.py</span> best_assembly.fasta <span class="at">-o</span> quast_output</span></code></pre></div>
 <p>This command will provide a set of summary files that you can use to evaluate your assembly.
 In particular, the N50, number of contigs, total length of all contigs, and the length of the largest contig are all important metrics that are often reported with genome assemblies. The N50 is <a href="https://en.wikipedia.org/wiki/N50,_L50,_and_related_statistics">the length of a contig, such that all the contigs of at least the same length together cover at least 50% of the assembly</a>.</p>
