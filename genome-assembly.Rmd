@@ -10,6 +10,11 @@ talk about the differences between short and long read assembly
 
 ### Running the assembler
 
+
+```{r, engine = 'bash', eval = FALSE}
+ln -s assembly/assembly.fasta best_assembly.fasta
+```
+
 ## Long read assembly
 Long read (PacBio and ONT) assembly uses a different suite of tools due to differences in assembly methods and datatypes.
 
@@ -29,31 +34,71 @@ where the sequencer can be one of the following: ```pb-rs2```, ```pb-sequel```, 
 
 
 ### Running the assembler
-There are many valid choices of assembler for long reads. Among the most popular and best validated are Flye (ONT/PacBio), Canu (ONT/PacBio), miniasm (ONT/PacBio), Raven (ONT/PacBio), Falcon (PacBio), and the hybrid assembler Unicycler (Illumina + ONT/PacBio).
+There are many valid choices of assembler for long reads. Among the most popular and best validated are Flye (ONT/PacBio), Canu (ONT/PacBio), miniasm (ONT/PacBio), Raven (ONT/PacBio), Falcon (PacBio), and the hybrid (Illumina + ONT/PacBio) assemblers Unicycler and hybridSPAdes.
 
 Each assembler comes with different usecases and drawbacks. For example, Canu is very slow and Falcon can only use PacBio reads, but both are diploid-aware assemblers which might be critical for certain use cases. Hybrid assembly can work well when single nucleotide differences are important, such as when a strain-level reference genome is available.
 
 I will use Flye [![Anaconda-Server Badge](https://anaconda.org/bioconda/flye/badges/version.svg)](https://anaconda.org/bioconda/flye)
-for this tutorial, since it also has a metagenomic mode for long read MAG binning. So if you are comfortable using Flye for genomes, you can use it for metagenomes too!
+for this tutorial, since it also has a metagenomic mode for long read MAG binning. So once you are comfortable using Flye for genomes, you can use it for metagenomes too!
 
 ```{r, engine = 'bash', eval = FALSE}
-flye --sequence-type --genome-size [] raw_reads.fq --out-dir assembly
+flye [sequence-type] --genome-size [] raw_reads.fq --out-dir assembly
 ```
 
 where the sequence type is one of ```--pacbio-raw```, ```--pacbio-hifi```, ```--nano-raw```, or ```--nano-hq```. Estimating genome size based on a quick skim of closest relatives can give you a better assembly, but its optional. The estimated genome size can be formatted in Megabases or Gigabases, e.g. 200m or 3.6g. The CPU parameter for flye is ```--threads```.
 
 The output assembly will be located in ```assembly/assembly.fasta```.
 
-
-
 ### Polishing
-Medaka
+There are also many polishers to be used with long read data. For ONT sequencing, Oxford Nanopore's own
+Medaka polisher [[Github](https://github.com/nanoporetech/medaka), [Conda](https://anaconda.org/bioconda/medaka)] works well, is very fast, and can polish using the same reads input into the assembly. Since Medaka is specifically built to work best with Flye, we will use it for this tutorial.
+
+To run Medaka:
+```{r, engine = 'bash', eval = FALSE}
+medaka_consensus -i raw_reads.fq -d assembly/assembly.fasta -o medaka_polished -m [model]
+```
+[See here for more information about how to choose the appropriate model](https://github.com/nanoporetech/medaka#models). Your results will be better if you carefully choose the right model, but the program should also work if you just provide ```r941_min_fast_g303``` for MinION/GridION or ```r941_prom_hac_g303``` for high accuracy PrometION data. The CPU parameter for medaka is ```-t```.
+
+Your new polished assembly will be located in ```medaka_polished/consensus.fasta```.
+
+For consistency with the short read tutorial for the steps below, I am going to create a symbolic link to our best assembly that we will use for the assembly assessment steps.
+```{r, engine = 'bash', eval = FALSE}
+ln -s medaka_polished/consensus.fasta best_assembly.fasta
+```
 
 ## Assembly assessment
-QUAST
+QUAST [[Github](https://github.com/ablab/quast), [Conda](https://anaconda.org/bioconda/quast)] will give 
+
+./quast.py test_data/contigs_1.fasta \
+           test_data/contigs_2.fasta \
+        -r test_data/reference.fasta.gz \
+        -g test_data/genes.txt \
+        -1 test_data/reads1.fastq.gz -2 test_data/reads2.fastq.gz \
+        -o quast_test_output
+        
+```{r, engine = 'bash', eval = FALSE}
+quast.py best_assembly.fasta -o quast_output
+```
+
+This command will provide a set of summary files that you can use to evaluate your assembly.
+In particular, the N50 (length of a contig, such that all the contigs of at least the same length together cover at least 50% of the assembly), number of contigs, total length of all contigs, and the length of the largest contig are all important metric that are often reported with genome assemblies.
+
+While assembly metrics are important, what you will more often be interested in is the level of completeness and contamination in your assembled genome. Which tool you use will depend on what kind of genome you are assembling.
 
 ### Prokaryotic genome
-CheckM2
+CheckM used to be the gold standard for bacterial completeness analysis. After nine years, CheckM2 has released in 2023!
 
+
+```{r, engine = 'bash', eval = FALSE}
+checkm2 predict --input best_assembly.fasta --output-directory checkm2
+```
+
+CheckM will automatically determine the lineage of our genome and then select a suite of single-copy marker genes relevant to that taxonomic group. The final output will provide completeness (what percentage of expected marker genes were detected) and contamination (what percentage of expected marker genes were detected more than once).
+
+
+```--threads ``` is the parameter for CPUs.
 ### Eukaryotic genome
-BUSCO
+BUSCO is an alternative completeness analysis tool with the added benefit of working with both prokaryotic and eukaryotic lineages. 
+
+### Viral genome
+You may still want to do this step, even if you didn't set out to assemble a viral genome! 

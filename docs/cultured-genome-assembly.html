@@ -23,7 +23,7 @@
 <meta name="author" content="Aaron Oliver" />
 
 
-<meta name="date" content="2023-07-24" />
+<meta name="date" content="2023-07-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -256,17 +256,22 @@ div.csl-indent {
 </div>
 <div id="running-the-assembler-1" class="section level3 hasAnchor" number="2.2.3">
 <h3><span class="header-section-number">2.2.3</span> Running the assembler<a href="cultured-genome-assembly.html#running-the-assembler-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>There are many valid choices of assembler for long reads. Among the most popular and best validated are Flye (ONT/PacBio), Canu (ONT/PacBio), miniasm (ONT/PacBio), Raven (ONT/PacBio), Falcon (PacBio), and the hybrid assembler Unicycler (Illumina + ONT/PacBio).</p>
+<p>There are many valid choices of assembler for long reads. Among the most popular and best validated are Flye (ONT/PacBio), Canu (ONT/PacBio), miniasm (ONT/PacBio), Raven (ONT/PacBio), Falcon (PacBio), and the hybrid (Illumina + ONT/PacBio) assemblers Unicycler and hybridSPAdes.</p>
 <p>Each assembler comes with different usecases and drawbacks. For example, Canu is very slow and Falcon can only use PacBio reads, but both are diploid-aware assemblers which might be critical for certain use cases. Hybrid assembly can work well when single nucleotide differences are important, such as when a strain-level reference genome is available.</p>
 <p>I will use Flye <a href="https://anaconda.org/bioconda/flye"><img src="https://anaconda.org/bioconda/flye/badges/version.svg" alt="Anaconda-Server Badge" /></a>
-for this tutorial, since it also has a metagenomic mode for long read MAG binning. So if you are comfortable using Flye for genomes, you can use it for metagenomes too!</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="cultured-genome-assembly.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">flye</span> <span class="at">--sequence-type</span> <span class="at">--genome-size</span> [] raw_reads.fq <span class="at">--out-dir</span> assembly</span></code></pre></div>
+for this tutorial, since it also has a metagenomic mode for long read MAG binning. So once you are comfortable using Flye for genomes, you can use it for metagenomes too!</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="cultured-genome-assembly.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">flye</span> [sequence-type] <span class="at">--genome-size</span> [] raw_reads.fq <span class="at">--out-dir</span> assembly</span></code></pre></div>
 <p>where the sequence type is one of <code>--pacbio-raw</code>, <code>--pacbio-hifi</code>, <code>--nano-raw</code>, or <code>--nano-hq</code>. Estimating genome size based on a quick skim of closest relatives can give you a better assembly, but its optional. The estimated genome size can be formatted in Megabases or Gigabases, e.g. 200m or 3.6g. The CPU parameter for flye is <code>--threads</code>.</p>
 <p>The output assembly will be located in <code>assembly/assembly.fasta</code>.</p>
 </div>
 <div id="polishing" class="section level3 hasAnchor" number="2.2.4">
 <h3><span class="header-section-number">2.2.4</span> Polishing<a href="cultured-genome-assembly.html#polishing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Medaka</p>
+<p>There are also many polishers to be used with long read data. For ONT sequencing, Oxford Nanopore’s own
+Medaka polisher [<a href="https://anaconda.org/bioconda/medaka">Conda</a>, <a href="https://github.com/nanoporetech/medaka">Github</a>] works well, is very fast, and can polish using the same reads input into the assembly. Since Medaka is specifically built to work best with Flye, we will use it for this tutorial.</p>
+<p>To run Medaka:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="cultured-genome-assembly.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">medaka_consensus</span> <span class="at">-i</span> raw_reads.fq <span class="at">-d</span> assembly/assembly.fasta <span class="at">-o</span> medaka_polished <span class="at">-m</span> [model]</span></code></pre></div>
+<p><a href="https://github.com/nanoporetech/medaka#models">See here for more information about how to choose the appropriate model</a>. Your results will be better if you carefully choose the right model, but the program should also work if you just provide <code>r941_min_fast_g303</code> for MinION/GridION or <code>r941_prom_hac_g303</code> for high accuracy PrometION data. The CPU parameter for medaka is <code>-t</code>.</p>
+<p>Your new polished assembly will be located in <code>medaka_polished/consensus.fasta</code>.</p>
 </div>
 </div>
 <div id="assembly-assessment" class="section level2 hasAnchor" number="2.3">
@@ -320,8 +325,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/genome-assembly.Rmd",
-"text": "Edit"
+"link": null,
+"text": null
 },
 "history": {
 "link": null,
@@ -331,7 +336,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bioinfo-notes.pdf", "bioinfo-notes.epub"],
+"download": null,
 "search": {
 "engine": "fuse",
 "options": null

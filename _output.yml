@@ -8,8 +8,6 @@ bookdown::gitbook:
         <li><a href="./">Aaron's Bioinformatics Notes</a></li>
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">A bookdown publication</a></li>
-    edit: https://github.com/rstudio/bookdown-demo/edit/master/%s
-    download: ["pdf", "epub"]
 bookdown::pdf_book:
   includes:
     in_header: preamble.tex
