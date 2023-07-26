@@ -183,7 +183,9 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.3.1" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#prokaryotic-genome"><i class="fa fa-check"></i><b>2.3.1</b> Prokaryotic genome</a></li>
 <li class="chapter" data-level="2.3.2" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#eukaryotic-genome"><i class="fa fa-check"></i><b>2.3.2</b> Eukaryotic genome</a></li>
+<li class="chapter" data-level="2.3.3" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#viral-genome"><i class="fa fa-check"></i><b>2.3.3</b> Viral genome</a></li>
 </ul></li>
+<li class="chapter" data-level="2.4" data-path="cultured-genome-assembly.html"><a href="cultured-genome-assembly.html#summary"><i class="fa fa-check"></i><b>2.4</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="genome-annotation.html"><a href="genome-annotation.html"><i class="fa fa-check"></i><b>3</b> Genome Annotation</a>
 <ul>
@@ -242,12 +244,12 @@ nucleotide level, we can use the Genome Taxonomy Database Toolkit
 prokaryotic genomes, and provide a predicted phylogenetic lineage, the
 closest known relative, and a distance metric (average nucleotide
 identity) to that relative.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="metaG.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gtdbtk</span> classify_wf <span class="at">--genome_dir</span> bins <span class="at">--out_dir</span> gtdb-tk</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="metaG.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gtdbtk</span> classify_wf <span class="at">--genome_dir</span> bins <span class="at">--out_dir</span> gtdb-tk</span></code></pre></div>
 <p>Other useful parameters include the file extension of metagenomic bins
 in your bin folder (–x), and the number of CPUs (–cpu). As an example,
 if your folder was full of .fna (“fasta nucleic acid”) files, and you
 wanted to use 8 CPUs, you could use the command:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="metaG.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gtdbtk</span> classify_wf <span class="at">--genome_dir</span> bins <span class="at">--out_dir</span> gtdb-tk <span class="at">--x</span> fna <span class="at">--cpu</span> 8</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="metaG.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gtdbtk</span> classify_wf <span class="at">--genome_dir</span> bins <span class="at">--out_dir</span> gtdb-tk <span class="at">--x</span> fna <span class="at">--cpu</span> 8</span></code></pre></div>
 <p>Keep in mind that the GTDB <span class="citation">(<a href="#ref-parks2022" role="doc-biblioref">Parks et al. 2022</a>)</span> can diverge in taxonomic names
 from other resources such as NCBI, so you should try to be consistent in
 what naming system you will use throughout your project.</p>

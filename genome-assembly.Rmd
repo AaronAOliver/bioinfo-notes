@@ -31,6 +31,7 @@ python longQC.py sampleqc -x [sequencer] -o qc_output raw_reads.fq
 where the sequencer can be one of the following: ```pb-rs2```, ```pb-sequel```, ```pb-hifi```, ```ont-ligation``` (PromethION), or ```ont-rapid``` (MinION, GridION, Flongle).
 
 ### Taxonomic assessment
+This step is more time consuming for long reads than short reads. So, I would recommend skipping this step and only coming back here 
 
 
 ### Running the assembler
@@ -57,6 +58,7 @@ To run Medaka:
 ```{r, engine = 'bash', eval = FALSE}
 medaka_consensus -i raw_reads.fq -d assembly/assembly.fasta -o medaka_polished -m [model]
 ```
+
 [See here for more information about how to choose the appropriate model](https://github.com/nanoporetech/medaka#models). Your results will be better if you carefully choose the right model, but the program should also work if you just provide ```r941_min_fast_g303``` for MinION/GridION or ```r941_prom_hac_g303``` for high accuracy PrometION data. The CPU parameter for medaka is ```-t```.
 
 Your new polished assembly will be located in ```medaka_polished/consensus.fasta```.
@@ -65,6 +67,8 @@ For consistency with the short read tutorial for the steps below, I am going to 
 ```{r, engine = 'bash', eval = FALSE}
 ln -s medaka_polished/consensus.fasta best_assembly.fasta
 ```
+
+For PacBio data, I suggest polishing with Racon [](). 
 
 ## Assembly assessment
 QUAST [[Github](https://github.com/ablab/quast), [Conda](https://anaconda.org/bioconda/quast)] will give 
@@ -81,24 +85,48 @@ quast.py best_assembly.fasta -o quast_output
 ```
 
 This command will provide a set of summary files that you can use to evaluate your assembly.
-In particular, the N50 (length of a contig, such that all the contigs of at least the same length together cover at least 50% of the assembly), number of contigs, total length of all contigs, and the length of the largest contig are all important metric that are often reported with genome assemblies.
+In particular, the N50, number of contigs, total length of all contigs, and the length of the largest contig are all important metrics that are often reported with genome assemblies. The N50 is [the length of a contig, such that all the contigs of at least the same length together cover at least 50% of the assembly](https://en.wikipedia.org/wiki/N50,_L50,_and_related_statistics).
 
 While assembly metrics are important, what you will more often be interested in is the level of completeness and contamination in your assembled genome. Which tool you use will depend on what kind of genome you are assembling.
+The final output of these tools provide completeness (what percentage of expected marker genes were detected) and contamination (what percentage of expected marker genes were detected more than once). 
+
+A threshold of 50% completeness and 10% contamination is considered a medium-quality genome, and 90% completeness and 5% contamination is necessary (but not sufficient) to have a high-quality genome.
 
 ### Prokaryotic genome
-CheckM used to be the gold standard for bacterial completeness analysis. After nine years, CheckM2 has released in 2023!
+CheckM used to be the gold standard for bacterial completeness analysis. After nine years, CheckM2 has released in 2023, so we now have a new state of the art.
 
-
+CheckM2 has a simple command to generate completeness metrics for you.
 ```{r, engine = 'bash', eval = FALSE}
 checkm2 predict --input best_assembly.fasta --output-directory checkm2
 ```
 
-CheckM will automatically determine the lineage of our genome and then select a suite of single-copy marker genes relevant to that taxonomic group. The final output will provide completeness (what percentage of expected marker genes were detected) and contamination (what percentage of expected marker genes were detected more than once).
+CheckM will automatically determine the lineage of our genome and then select a suite of single-copy marker genes relevant to that taxonomic group. ```--threads ``` is the parameter for CPUs.
 
-
-```--threads ``` is the parameter for CPUs.
 ### Eukaryotic genome
-BUSCO is an alternative completeness analysis tool with the added benefit of working with both prokaryotic and eukaryotic lineages. 
+BUSCO is an alternative completeness analysis tool with the added benefit of working with both prokaryotic and eukaryotic lineages. In general, I recommend using BUSCO primarily for eukaryotic assemblies, and only using it for prokaryotic assemblies as a point of comparison to CheckM2. 
+
+To use BUSCO, you will first have to find the lineage closest to your genome in the [list of available BUSCO lineages](https://busco.ezlab.org/list_of_lineages.html). For example, if you had a diatom genome, the best lineage would be ```stramenopiles_odb10```. If you are unsure of your genome's lineage, you can run BUSCO's automated lineage selection by omitting the ```-l``` parameter, but it is slow and does not work as well with eukaryotes.
+
+```{r, engine = 'bash', eval = FALSE}
+busco -i best_assembly.fasta -l [LINEAGE] -o busco -m [MODE]
+```
+
+The mode parameter ```-m``` should be one of ```genome```, ```proteins```, or ```transcriptome```, depending on your data set.
+
+The output file ```busco/short_summary.txt``` will provide completeness and contamination metrics.
 
 ### Viral genome
-You may still want to do this step, even if you didn't set out to assemble a viral genome! 
+You may still want to do this step, even if you didn't set out to assemble a viral genome! There is already a nice protocol/tutorial that I use for this step, [so I'm just going to link it here!](https://www.protocols.io/view/viral-sequence-identification-sop-with-virsorter2-5qpvoyqebg4o/v3)
+
+## Summary
+
+Here is the data you have generated up until this point:
+
+- Quality control metrics on your reads
+- A taxonomic distribution of your reads
+- Cleaned reads with adapters and low quality sequences removed
+- An assembled genome
+- Assembly statistics describing how well your genome assembled
+- Completeness and contamination statistics for your genome
+
+Now, you'll need to annotate your genome to understand its metabolic capacities, perform phylogenetics, and detect novel proteins. Lucky for you, such a tutorial is available in the next chapter!

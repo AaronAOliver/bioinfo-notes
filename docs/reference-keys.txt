@@ -13,6 +13,8 @@ polishing
 assembly-assessment
 prokaryotic-genome
 eukaryotic-genome
+viral-genome
+summary
 genome-annotation
 building-gene-models
 prokaryotes
